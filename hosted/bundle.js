@@ -17,6 +17,14 @@ var handleDomo = function handleDomo(e) {
     return false;
 };
 
+var handleAgeUp = function handleAgeUp(e) {
+    e.preventDefault();
+
+    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
+        loadDomosFromServer();
+    });
+};
+
 var DomoForm = function DomoForm(props) {
     return React.createElement(
         "form",
@@ -39,6 +47,35 @@ var DomoForm = function DomoForm(props) {
             "Age: "
         ),
         React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement(
+            "select",
+            { id: "domoClass", name: "class" },
+            React.createElement(
+                "option",
+                { value: "Barbarian" },
+                "Barbarian"
+            ),
+            React.createElement(
+                "option",
+                { value: "Monk" },
+                "Monk"
+            ),
+            React.createElement(
+                "option",
+                { value: "Paladin" },
+                "Paladin"
+            ),
+            React.createElement(
+                "option",
+                { value: "Rogue" },
+                "Rogue"
+            ),
+            React.createElement(
+                "option",
+                { value: "Wizard" },
+                "Wizard"
+            )
+        ),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
@@ -73,7 +110,14 @@ var DomoList = function DomoList(props) {
                 { className: "domoAge" },
                 "Age: ",
                 domo.age
-            )
+            ),
+            React.createElement(
+                "h3",
+                { className: "domoClass" },
+                "Class: ",
+                domo.class
+            ),
+            React.createElement("input", { className: "ageButton", type: "submit", value: "Age Up" })
         );
     });
 

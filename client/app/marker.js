@@ -15,6 +15,14 @@ const handleDomo = (e) => {
     return false;
 };
 
+const handleAgeUp = (e) => {
+    e.preventDefault();
+    
+    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function(){
+        loadDomosFromServer();
+    });
+}
+
 const DomoForm = (props) => {
     return (
     <form id="domoForm" 
@@ -28,6 +36,13 @@ const DomoForm = (props) => {
     <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
     <label htmlFor="age">Age: </label>
     <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
+    <select id="domoClass" name="class">
+         <option value="Barbarian">Barbarian</option>
+         <option value="Monk">Monk</option>  
+        <option value="Paladin">Paladin</option>  
+        <option value="Rogue">Rogue</option>  
+        <option value="Wizard">Wizard</option>  
+    </select>
     <input type="hidden" name="_csrf" value={props.csrf}/>
     <input className="makeDomoSubmit" type="submit" value="Make Domo" />
     </form>
@@ -49,6 +64,8 @@ const DomoList = function(props) {
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
+                <h3 className="domoClass">Class: {domo.class}</h3>
+                <input className="ageButton" type="submit" value="Age Up"/>
             </div>
         );
     });
