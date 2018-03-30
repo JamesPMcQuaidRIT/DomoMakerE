@@ -19,7 +19,7 @@ const handleDomo = (e) => {
 
 const handleAgeUp = (e) => {
     e.preventDefault();
-    
+        
     sendAjax('POST', $("#ageForm").attr("action"), $("#ageForm").serialize(), function(){
         loadDomosFromServer(token);
     });
@@ -75,7 +75,7 @@ const DomoList = function(props) {
                     className="ageForm"
                 >
                     <input type="hidden" name="_csrf" value={props.csrf}/>
-                    <input id="domoNameCheck" type="hidden" name="nameCheck" value={domo._id} placeholder="Domo Name"/>
+                    <input id="domoNameCheck" type="hidden" name="_id" value={domo._id} placeholder="Domo Name"/>
                     <input className="ageButton" type="submit" value="Age Up"/>
                 </form>
             </div>
@@ -105,10 +105,10 @@ const setup = function(csrf) {
     );
     
     ReactDOM.render(
-        <DomoList domos={[]} csrf={csrf} />, document.querySelector("#domos")
+        <DomoList domos={[]} csrf={csrf}/>, document.querySelector("#domos")
     );
     
-    loadDomosFromServer(csrf);    
+    loadDomosFromServer(token);    
 };
 
 const getToken = () => {

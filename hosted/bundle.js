@@ -129,7 +129,7 @@ var DomoList = function DomoList(props) {
                     className: "ageForm"
                 },
                 React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "domoNameCheck", type: "hidden", name: "nameCheck", value: domo._id, placeholder: "Domo Name" }),
+                React.createElement("input", { id: "domoNameCheck", type: "hidden", name: "_id", value: domo._id, placeholder: "Domo Name" }),
                 React.createElement("input", { className: "ageButton", type: "submit", value: "Age Up" })
             )
         );
@@ -155,7 +155,7 @@ var setup = function setup(csrf) {
 
     ReactDOM.render(React.createElement(DomoList, { domos: [], csrf: csrf }), document.querySelector("#domos"));
 
-    loadDomosFromServer(csrf);
+    loadDomosFromServer(token);
 };
 
 var getToken = function getToken() {

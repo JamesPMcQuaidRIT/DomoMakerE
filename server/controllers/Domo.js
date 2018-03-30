@@ -58,23 +58,20 @@ const getDomos = (request, response) => {
   });
 };
 
-const ageUpDomo = (req, res) =>
-Domo.DomoModel.upAge(req.session.account._id, req.body._id, (err, doc) => {
+const ageUpDomo = (req, res) => {
+        
+  Domo.DomoModel.upAge(req.session.account._id, req.body._id, (err, doc) => {
   if (err) {
     console.log(err);
     return res.status(400).json({ error: 'An error occured' });
   }
 
-  const newAge = doc.age + 1;
+  const domo = doc;
 
-  const domoData = {
-    name: doc.name,
-    age: newAge,
-    class: doc.class,
-    owner: doc.session.account._id,
-  };
-
-  const newDomo = new Domo.DomoModel(domoData);
+console.log(doc);      
+  domo.age++;
+      
+  const newDomo = new Domo.DomoModel(domo);
 
   const domoPromise = newDomo.save();
 
@@ -82,6 +79,7 @@ Domo.DomoModel.upAge(req.session.account._id, req.body._id, (err, doc) => {
 
   return res.json({ domo: doc });
 });
+};
 
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
