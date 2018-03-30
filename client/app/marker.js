@@ -1,3 +1,5 @@
+let token;
+
 const handleDomo = (e) => {
     e.preventDefault();
     
@@ -9,7 +11,7 @@ const handleDomo = (e) => {
     }
         
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function(){
-        loadDomosFromServer();
+        loadDomosFromServer(token);
     });
     
     return false;
@@ -19,7 +21,7 @@ const handleAgeUp = (e) => {
     e.preventDefault();
     
     sendAjax('POST', $("#ageForm").attr("action"), $("#ageForm").serialize(), function(){
-        loadDomosFromServer();
+        loadDomosFromServer(token);
     });
 }
 
@@ -43,7 +45,7 @@ const DomoForm = (props) => {
         <option value="Rogue">Rogue</option>  
         <option value="Wizard">Wizard</option>  
     </select>
-    <input type="hidden" name="_csrf" value={props.csrf}/>
+    <input id="csrfValue" type="hidden" name="_csrf" value={props.csrf}/>
     <input className="makeDomoSubmit" type="submit" value="Make Domo" />
     </form>
     );
@@ -60,7 +62,7 @@ const DomoList = function(props) {
     
     const domoNodes = props.domos.map(function(domo) {
         return (
-            <div key={domo._id} className="domo">
+            <div data-key={domo._id} className="domo">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
@@ -72,7 +74,8 @@ const DomoList = function(props) {
                     method="POST"
                     className="ageForm"
                 >
-                    <input id="domoNameCheck" type="text" name="nameCheck" value=`${domo.age}` placeholder="Domo Name"/>
+                    <input type="hidden" name="_csrf" value={props.csrf}/>
+                    <input id="domoNameCheck" type="hidden" name="nameCheck" value={domo._id} placeholder="Domo Name"/>
                     <input className="ageButton" type="submit" value="Age Up"/>
                 </form>
             </div>
@@ -86,24 +89,26 @@ const DomoList = function(props) {
     );
 };
 
-const loadDomosFromServer = () => {
+const loadDomosFromServer = (csrf) => {
     sendAjax('GET', '/getDomos', null, (data) => {
         ReactDOM.render(
-            <DomoList domos={data.domo} />, document.querySelector("#domos")
+            <DomoList domos={data.domo} csrf={csrf} />, document.querySelector("#domos")
         );
     });
 };
 
 const setup = function(csrf) {
+    token = csrf;
+    
     ReactDOM.render(
         <DomoForm csrf={csrf} />, document.querySelector("#makeDomo")
     );
     
     ReactDOM.render(
-        <DomoList domos={[]} />, document.querySelector("#domos")
+        <DomoList domos={[]} csrf={csrf} />, document.querySelector("#domos")
     );
     
-    loadDomosFromServer();    
+    loadDomosFromServer(csrf);    
 };
 
 const getToken = () => {

@@ -1,5 +1,7 @@
 "use strict";
 
+var token = void 0;
+
 var handleDomo = function handleDomo(e) {
     e.preventDefault();
 
@@ -11,7 +13,7 @@ var handleDomo = function handleDomo(e) {
     }
 
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-        loadDomosFromServer();
+        loadDomosFromServer(token);
     });
 
     return false;
@@ -20,8 +22,8 @@ var handleDomo = function handleDomo(e) {
 var handleAgeUp = function handleAgeUp(e) {
     e.preventDefault();
 
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-        loadDomosFromServer();
+    sendAjax('POST', $("#ageForm").attr("action"), $("#ageForm").serialize(), function () {
+        loadDomosFromServer(token);
     });
 };
 
@@ -76,7 +78,7 @@ var DomoForm = function DomoForm(props) {
                 "Wizard"
             )
         ),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { id: "csrfValue", type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
 };
@@ -97,7 +99,7 @@ var DomoList = function DomoList(props) {
     var domoNodes = props.domos.map(function (domo) {
         return React.createElement(
             "div",
-            { key: domo._id, className: "domo" },
+            { "data-key": domo._id, className: "domo" },
             React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
             React.createElement(
                 "h3",
@@ -117,7 +119,19 @@ var DomoList = function DomoList(props) {
                 "Class: ",
                 domo.class
             ),
-            React.createElement("input", { className: "ageButton", type: "submit", value: "Age Up" })
+            React.createElement(
+                "form",
+                { id: "ageForm",
+                    onSubmit: handleAgeUp,
+                    name: "ageForm",
+                    action: "/age",
+                    method: "POST",
+                    className: "ageForm"
+                },
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "domoNameCheck", type: "hidden", name: "nameCheck", value: domo._id, placeholder: "Domo Name" }),
+                React.createElement("input", { className: "ageButton", type: "submit", value: "Age Up" })
+            )
         );
     });
 
@@ -128,18 +142,20 @@ var DomoList = function DomoList(props) {
     );
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
+var loadDomosFromServer = function loadDomosFromServer(csrf) {
     sendAjax('GET', '/getDomos', null, function (data) {
-        ReactDOM.render(React.createElement(DomoList, { domos: data.domo }), document.querySelector("#domos"));
+        ReactDOM.render(React.createElement(DomoList, { domos: data.domo, csrf: csrf }), document.querySelector("#domos"));
     });
 };
 
 var setup = function setup(csrf) {
+    token = csrf;
+
     ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 
-    ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+    ReactDOM.render(React.createElement(DomoList, { domos: [], csrf: csrf }), document.querySelector("#domos"));
 
-    loadDomosFromServer();
+    loadDomosFromServer(csrf);
 };
 
 var getToken = function getToken() {
