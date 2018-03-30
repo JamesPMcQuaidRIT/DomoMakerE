@@ -58,6 +58,14 @@ const getDomos = (request, response) => {
   });
 };
 
+const ageUpDomo = (req, res) => {
+    const nameToChange = req.body.nameCheck;
+    
+    dbURL.collection("")
+ 
+};
+
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
 module.exports.make = makeDomo;
+module.exports.ageUp = ageUpDomo

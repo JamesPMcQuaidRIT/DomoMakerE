@@ -18,7 +18,7 @@ const handleDomo = (e) => {
 const handleAgeUp = (e) => {
     e.preventDefault();
     
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function(){
+    sendAjax('POST', $("#ageForm").attr("action"), $("#ageForm").serialize(), function(){
         loadDomosFromServer();
     });
 }
@@ -65,7 +65,16 @@ const DomoList = function(props) {
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
                 <h3 className="domoClass">Class: {domo.class}</h3>
-                <input className="ageButton" type="submit" value="Age Up"/>
+                <form id="ageForm" 
+                    onSubmit={handleAgeUp}
+                    name="ageForm"
+                    action="/age"
+                    method="POST"
+                    className="ageForm"
+                >
+                    <input id="domoNameCheck" type="text" name="nameCheck" value=`${domo.age}` placeholder="Domo Name"/>
+                    <input className="ageButton" type="submit" value="Age Up"/>
+                </form>
             </div>
         );
     });
