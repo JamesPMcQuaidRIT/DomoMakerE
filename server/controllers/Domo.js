@@ -59,26 +59,25 @@ const getDomos = (request, response) => {
 };
 
 const ageUpDomo = (req, res) => {
-        
   Domo.DomoModel.upAge(req.session.account._id, req.body._id, (err, doc) => {
-  if (err) {
-    console.log(err);
-    return res.status(400).json({ error: 'An error occured' });
-  }
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
 
-  const domo = doc;
+    const domo = doc;
 
-console.log(doc);      
-  domo.age++;
-      
-  const newDomo = new Domo.DomoModel(domo);
+    console.log(doc);
+    domo.age++;
 
-  const domoPromise = newDomo.save();
+    const newDomo = new Domo.DomoModel(domo);
 
-  domoPromise.then(() => res.json({ redirect: '/maker' }));
+    const domoPromise = newDomo.save();
 
-  return res.json({ domo: doc });
-});
+    domoPromise.then(() => res.json({ redirect: '/maker' }));
+
+    return res.json({ domo: doc });
+  });
 };
 
 module.exports.makerPage = makerPage;
